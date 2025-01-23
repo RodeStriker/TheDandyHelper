@@ -24,7 +24,7 @@ function UILibrary:CreateWindow(title)
     corner.CornerRadius = UDim.new(0, 10)
     corner.Parent = mainFrame
 
-    -- Background with striped effect
+    -- Background Frame with ImageLabel
     local background = Instance.new("Frame")
     background.Name = "Background"
     background.Size = UDim2.new(1, 0, 1, 0)
@@ -34,11 +34,19 @@ function UILibrary:CreateWindow(title)
     local imageLabel = Instance.new("ImageLabel")
     imageLabel.Size = UDim2.new(1, 0, 1, 0)
     imageLabel.Image = "rbxassetid://6794283750"
-    imageLabel.ImageTransparency = 0.5
     imageLabel.ScaleType = Enum.ScaleType.Tile
     imageLabel.TileSize = UDim2.new(0, 50, 0, 50)
     imageLabel.BackgroundTransparency = 1
     imageLabel.Parent = background
+
+    -- Add UIGradient to the ImageLabel
+    local backgroundGradient = Instance.new("UIGradient")
+    backgroundGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(50, 50, 50)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 20))
+    }
+    backgroundGradient.Rotation = 45
+    backgroundGradient.Parent = imageLabel
 
     -- Title Bar
     local titleBar = Instance.new("Frame")
@@ -60,17 +68,36 @@ function UILibrary:CreateWindow(title)
     titleText.TextXAlignment = Enum.TextXAlignment.Left
     titleText.Parent = titleBar
 
-    -- Close Button
-    local closeButton = Instance.new("TextButton")
+    -- Circular Close Button
+    local closeButton = Instance.new("ImageButton")
     closeButton.Name = "CloseButton"
     closeButton.Size = UDim2.new(0, 40, 0, 40)
-    closeButton.Position = UDim2.new(1, -40, 0, 0)
+    closeButton.Position = UDim2.new(1, 10, 0, -20) -- Positioned outside the main frame
+    closeButton.AnchorPoint = Vector2.new(1, 0.5)
     closeButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
-    closeButton.Text = "X"
-    closeButton.Font = Enum.Font.GothamBold
-    closeButton.TextSize = 20
-    closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    closeButton.Parent = titleBar
+    closeButton.Parent = screenGui
+
+    local closeButtonCorner = Instance.new("UICorner")
+    closeButtonCorner.CornerRadius = UDim.new(1, 0) -- Makes it a circle
+    closeButtonCorner.Parent = closeButton
+
+    -- Add UIGradient to Close Button
+    local closeGradient = Instance.new("UIGradient")
+    closeGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 50, 50))
+    }
+    closeGradient.Rotation = 90
+    closeGradient.Parent = closeButton
+
+    local closeText = Instance.new("TextLabel")
+    closeText.Size = UDim2.new(1, 0, 1, 0)
+    closeText.BackgroundTransparency = 1
+    closeText.Font = Enum.Font.GothamBold
+    closeText.Text = "X"
+    closeText.TextSize = 20
+    closeText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeText.Parent = closeButton
 
     -- Scroll Frame for Content
     local contentFrame = Instance.new("ScrollingFrame")
@@ -83,6 +110,7 @@ function UILibrary:CreateWindow(title)
     contentFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
     contentFrame.Parent = mainFrame
 
+    -- Function to add rounded buttons
     local function addRoundedButton(parent, text, callback)
         local button = Instance.new("TextButton")
         button.Name = text
@@ -102,38 +130,39 @@ function UILibrary:CreateWindow(title)
         button.MouseButton1Click:Connect(callback)
     end
 
-    -- Make the UI draggable
-    local dragging = false
-    local dragInput, dragStart, startPos
-
+    -- Draggable functionality
+    local dragging, dragStart, startPos
     titleBar.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
             dragging = true
             dragStart = input.Position
             startPos = mainFrame.Position
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
         end
     end)
 
     titleBar.InputChanged:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-            dragInput = input
+            if dragging then
+                local delta = input.Position - dragStart
+                mainFrame.Position = UDim2.new(
+                    startPos.X.Scale,
+                    startPos.X.Offset + delta.X,
+                    startPos.Y.Scale,
+                    startPos.Y.Offset + delta.Y
+                )
+            end
         end
     end)
 
-    game:GetService("UserInputService").InputChanged:Connect(function(input)
-        if input == dragInput and dragging then
-            local delta = input.Position - dragStart
-            mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    titleBar.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
         end
     end)
 
+    -- Close Button functionality
     closeButton.MouseButton1Click:Connect(function()
-        mainFrame.Visible = false
+        screenGui:Destroy()
     end)
 
     return {
