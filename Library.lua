@@ -213,4 +213,3 @@ function UILibrary:CreateWindow(title)
 end
 
 return UILibrary
-return UILibrary
