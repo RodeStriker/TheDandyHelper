@@ -101,9 +101,35 @@ local TextLabel_1 = createTextLabel(CharacterFrame, "TextLabel", UDim2.new(0.37,
 })
 createUICorner(TextLabel_1, 8)
 
+local SearchFrame = createFrame(CharacterFrame, "SearchFrame", UDim2.new(0.35, 0, 0.08, 0), UDim2.new(0.02, 0, -0.1, 0), Color3.fromRGB(0, 0, 0), 0.5, 6, {
+    AnchorPoint = Vector2.new(0, 0),
+})
+createUICorner(SearchFrame, 6)
+
+local SearchTextBox = Instance.new("TextBox")
+SearchTextBox.Parent = SearchFrame
+SearchTextBox.Size = UDim2.new(0.95, 0, 0.8, 0)
+SearchTextBox.Position = UDim2.new(0.025, 0, 0.1, 0)
+SearchTextBox.BackgroundTransparency = 1
+SearchTextBox.Text = "Search Toons"
+SearchTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+SearchTextBox.TextSize = 14
+SearchTextBox.Font = Enum.Font.FredokaOne
+SearchTextBox.TextXAlignment = Enum.TextXAlignment.Left
+SearchTextBox.ClearTextOnFocus = true
+
+local CloseButton = Instance.new("TextButton")
+CloseButton.Parent = CharacterFrame
+CloseButton.Size = UDim2.new(0.05, 0, 0.05, 0)
+CloseButton.Position = UDim2.new(0.95, 0, 0.02, 0)
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.TextSize = 16
+createUICorner(CloseButton, 8)
+
 local ScrollingFrame_1 = createScrollingFrame(CharacterFrame, "ScrollingFrame", UDim2.new(0.727, 0, 0.945, 0), UDim2.new(0.016, 0, 0.027, 0), Color3.fromRGB(0, 0, 0), 0.65, 10, {
     ClipsDescendants = true,
-    ScrollingEnabled = true,
     CanvasSize = UDim2.new(0, 0, 4, 0),
     ScrollBarThickness = 12,
 })
