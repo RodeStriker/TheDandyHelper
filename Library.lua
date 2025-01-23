@@ -5,48 +5,46 @@ function UILibrary:CreateWindow(title)
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "UILibrary"
     screenGui.ResetOnSpawn = false
-    screenGui.IgnoreGuiInset = true -- Ensures compatibility on mobile
+    screenGui.IgnoreGuiInset = true
     screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
-    -- Main Frame (stores all other frames)
+    -- Main Frame
     local mainFrame = Instance.new("Frame")
     mainFrame.Name = "MainFrame"
-    mainFrame.Size = UDim2.new(0, 600, 0, 400)
+    mainFrame.Size = UDim2.new(0, 700, 0, 500)
     mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
     mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-    mainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     mainFrame.BorderSizePixel = 0
-    mainFrame.Active = true -- Required for dragging
+    mainFrame.Active = true
     mainFrame.Parent = screenGui
 
     -- UICorner for rounded edges
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 10) -- Adjust for roundness
+    corner.CornerRadius = UDim.new(0, 10)
     corner.Parent = mainFrame
 
-    -- Background Image with Gradient
+    -- Background with striped effect
     local background = Instance.new("Frame")
     background.Name = "Background"
     background.Size = UDim2.new(1, 0, 1, 0)
-    background.Position = UDim2.new(0, 0, 0, 0)
-    background.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    background.BorderSizePixel = 0
+    background.BackgroundTransparency = 1
     background.Parent = mainFrame
 
-    -- Gradient Effect
-    local gradient = Instance.new("UIGradient")
-    gradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 30, 30)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(50, 50, 50))
-    }
-    gradient.Rotation = 45
-    gradient.Parent = background
+    local imageLabel = Instance.new("ImageLabel")
+    imageLabel.Size = UDim2.new(1, 0, 1, 0)
+    imageLabel.Image = "rbxassetid://6794283750"
+    imageLabel.ImageTransparency = 0.5
+    imageLabel.ScaleType = Enum.ScaleType.Tile
+    imageLabel.TileSize = UDim2.new(0, 50, 0, 50)
+    imageLabel.BackgroundTransparency = 1
+    imageLabel.Parent = background
 
     -- Title Bar
     local titleBar = Instance.new("Frame")
     titleBar.Name = "TitleBar"
     titleBar.Size = UDim2.new(1, 0, 0, 40)
-    titleBar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    titleBar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     titleBar.BorderSizePixel = 0
     titleBar.Parent = mainFrame
 
@@ -57,7 +55,7 @@ function UILibrary:CreateWindow(title)
     titleText.BackgroundTransparency = 1
     titleText.Font = Enum.Font.GothamBold
     titleText.Text = title
-    titleText.TextSize = 18
+    titleText.TextSize = 20
     titleText.TextColor3 = Color3.fromRGB(255, 255, 255)
     titleText.TextXAlignment = Enum.TextXAlignment.Left
     titleText.Parent = titleBar
@@ -74,7 +72,7 @@ function UILibrary:CreateWindow(title)
     closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     closeButton.Parent = titleBar
 
-    -- Scrolling Frame for Content
+    -- Scroll Frame for Content
     local contentFrame = Instance.new("ScrollingFrame")
     contentFrame.Name = "ContentFrame"
     contentFrame.Size = UDim2.new(1, -20, 1, -60)
@@ -85,12 +83,11 @@ function UILibrary:CreateWindow(title)
     contentFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
     contentFrame.Parent = mainFrame
 
-    -- Add UICorner to ScrollingFrame items dynamically
     local function addRoundedButton(parent, text, callback)
         local button = Instance.new("TextButton")
         button.Name = text
         button.Size = UDim2.new(1, -10, 0, 40)
-        button.Position = UDim2.new(0, 5, 0, (#contentFrame:GetChildren() - 1) * 45)
+        button.Position = UDim2.new(0, 5, 0, (#parent:GetChildren() - 1) * 45)
         button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
         button.Text = text
         button.Font = Enum.Font.GothamBold
@@ -105,7 +102,7 @@ function UILibrary:CreateWindow(title)
         button.MouseButton1Click:Connect(callback)
     end
 
-    -- Make the UI Draggable
+    -- Make the UI draggable
     local dragging = false
     local dragInput, dragStart, startPos
 
@@ -135,7 +132,6 @@ function UILibrary:CreateWindow(title)
         end
     end)
 
-    -- Close functionality
     closeButton.MouseButton1Click:Connect(function()
         mainFrame.Visible = false
     end)
