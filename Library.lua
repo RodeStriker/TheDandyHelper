@@ -13,6 +13,21 @@ local function createFrame(parent, name, size, position, bgColor, transparency, 
     return frame
 end
 
+local function createScrollingFrame(parent, name, size, position, bgColor, transparency, zIndex, additionalProps)
+    local scrollingFrame = Instance.new("ScrollingFrame")
+    scrollingFrame.Parent = parent
+    scrollingFrame.Name = name or "ScrollingFrame"
+    scrollingFrame.Size = size or UDim2.new(1, 0, 1, 0)
+    scrollingFrame.Position = position or UDim2.new(0, 0, 0, 0)
+    scrollingFrame.BackgroundColor3 = bgColor or Color3.new(1, 1, 1)
+    scrollingFrame.BackgroundTransparency = transparency or 0
+    scrollingFrame.ZIndex = zIndex or 1
+    for prop, value in pairs(additionalProps or {}) do
+        scrollingFrame[prop] = value
+    end
+    return scrollingFrame
+end
+
 local function createTextLabel(parent, name, size, position, text, textColor, textSize, additionalProps)
     local label = Instance.new("TextLabel")
     label.Parent = parent
@@ -86,9 +101,11 @@ local TextLabel_1 = createTextLabel(CharacterFrame, "TextLabel", UDim2.new(0.37,
 })
 createUICorner(TextLabel_1, 8)
 
-local ScrollingFrame_1 = createFrame(CharacterFrame, "ScrollingFrame", UDim2.new(0.727, 0, 0.945, 0), UDim2.new(0.016, 0, 0.027, 0), Color3.fromRGB(0, 0, 0), 0.65, 10, {
+local ScrollingFrame_1 = createScrollingFrame(CharacterFrame, "ScrollingFrame", UDim2.new(0.727, 0, 0.945, 0), UDim2.new(0.016, 0, 0.027, 0), Color3.fromRGB(0, 0, 0), 0.65, 10, {
     ClipsDescendants = true,
     ScrollingEnabled = true,
+    CanvasSize = UDim2.new(0, 0, 4, 0),
+    ScrollBarThickness = 12,
 })
 
 local UIGridLayout_1 = Instance.new("UIGridLayout")
