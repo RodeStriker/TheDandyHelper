@@ -1,67 +1,140 @@
-local LibraryUI = {}
+local function createFrame(parent, name, size, position, bgColor, transparency, zIndex, additionalProps)
+    local frame = Instance.new("Frame")
+    frame.Parent = parent
+    frame.Name = name or "Frame"
+    frame.Size = size or UDim2.new(1, 0, 1, 0)
+    frame.Position = position or UDim2.new(0, 0, 0, 0)
+    frame.BackgroundColor3 = bgColor or Color3.new(1, 1, 1)
+    frame.BackgroundTransparency = transparency or 0
+    frame.ZIndex = zIndex or 1
+    for prop, value in pairs(additionalProps or {}) do
+        frame[prop] = value
+    end
+    return frame
+end
 
-function LibraryUI:CreateLibrary()
-    local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Parent = game.CoreGui
-    ScreenGui.Name = "LibraryUI"
-    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    ScreenGui.IgnoreGuiInset = true
+local function createTextLabel(parent, name, size, position, text, textColor, textSize, additionalProps)
+    local label = Instance.new("TextLabel")
+    label.Parent = parent
+    label.Name = name or "TextLabel"
+    label.Size = size or UDim2.new(1, 0, 1, 0)
+    label.Position = position or UDim2.new(0, 0, 0, 0)
+    label.Text = text or ""
+    label.TextColor3 = textColor or Color3.new(1, 1, 1)
+    label.TextSize = textSize or 14
+    label.BackgroundTransparency = 1
+    label.BorderSizePixel = 0
+    for prop, value in pairs(additionalProps or {}) do
+        label[prop] = value
+    end
+    return label
+end
 
-    local MainFrame = Instance.new("Frame")
-    MainFrame.Parent = ScreenGui
-    MainFrame.Name = "MainFrame"
-    MainFrame.Size = UDim2.new(0.5, 0, 0.6, 0)
-    MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-    MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(121, 121, 121)
-    MainFrame.BorderSizePixel = 0
+local function createImageLabel(parent, name, size, position, image, imageTransparency, zIndex, additionalProps)
+    local imageLabel = Instance.new("ImageLabel")
+    imageLabel.Parent = parent
+    imageLabel.Name = name or "ImageLabel"
+    imageLabel.Size = size or UDim2.new(1, 0, 1, 0)
+    imageLabel.Position = position or UDim2.new(0, 0, 0, 0)
+    imageLabel.Image = image or ""
+    imageLabel.ImageTransparency = imageTransparency or 0
+    imageLabel.ZIndex = zIndex or 1
+    imageLabel.BackgroundTransparency = 1
+    imageLabel.BorderSizePixel = 0
+    for prop, value in pairs(additionalProps or {}) do
+        imageLabel[prop] = value
+    end
+    return imageLabel
+end
 
-    local UICorner = Instance.new("UICorner")
-    UICorner.Parent = MainFrame
-    UICorner.CornerRadius = UDim.new(0, 8)
+local function createUICorner(parent, cornerRadius)
+    local corner = Instance.new("UICorner")
+    corner.Parent = parent
+    corner.CornerRadius = UDim.new(0, cornerRadius or 8)
+    return corner
+end
 
-    local ScrollingFrame = Instance.new("ScrollingFrame")
-    ScrollingFrame.Parent = MainFrame
-    ScrollingFrame.Name = "ItemScrollingFrame"
-    ScrollingFrame.Size = UDim2.new(0.9, 0, 0.9, 0)
-    ScrollingFrame.Position = UDim2.new(0.05, 0, 0.05, 0)
-    ScrollingFrame.CanvasSize = UDim2.new(0, 0, 2, 0)
-    ScrollingFrame.BackgroundTransparency = 1
-    ScrollingFrame.ScrollBarThickness = 10
-    
-    local UIGridLayout = Instance.new("UIGridLayout")
-    UIGridLayout.Parent = ScrollingFrame
-    UIGridLayout.CellSize = UDim2.new(0.2, 0, 0.2, 0)
-    UIGridLayout.CellPadding = UDim2.new(0.02, 0, 0.02, 0)
+local ScreenGui_1 = Instance.new("ScreenGui")
+ScreenGui_1.Parent = game.CoreGui
+ScreenGui_1.Name = "LibGui"
+ScreenGui_1.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui_1.IgnoreGuiInset = true
 
-    return {
-        ScreenGui = ScreenGui,
-        MainFrame = MainFrame,
-        ScrollingFrame = ScrollingFrame,
-        UIGridLayout = UIGridLayout,
+local CharacterFrame = createFrame(ScreenGui_1, "CharacterFrame", UDim2.new(0.518, 0, 0.639, 0), UDim2.new(0.5, 0, 0.485, 0), Color3.fromRGB(121, 121, 121), 1, 2, {
+    AnchorPoint = Vector2.new(0.5, 0.5),
+    SizeConstraint = Enum.SizeConstraint.RelativeXY,
+})
+
+local Frame_2 = createFrame(CharacterFrame, "Frame", UDim2.new(1, 0, 1, 0), UDim2.new(0.5, 0, 0.5, 0), Color3.fromRGB(121, 121, 121), 0, 2, {
+    AnchorPoint = Vector2.new(0.5, 0.5),
+})
+createUICorner(Frame_2, 8)
+
+local UIGradient_1 = Instance.new("UIGradient")
+UIGradient_1.Parent = Frame_2
+UIGradient_1.Rotation = 90
+UIGradient_1.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(140, 140, 140)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(81, 81, 81))
+})
+
+local TextLabel_1 = createTextLabel(CharacterFrame, "TextLabel", UDim2.new(0.37, 0, 0.1, 0), UDim2.new(0.646, 0, -0.1, 0), "SELECT TOON", Color3.fromRGB(255, 255, 255), 14, {
+    ZIndex = 6,
+    Font = Enum.Font.FredokaOne,
+    TextXAlignment = Enum.TextXAlignment.Center,
+    TextYAlignment = Enum.TextYAlignment.Center
+})
+createUICorner(TextLabel_1, 8)
+
+local ScrollingFrame_1 = createFrame(CharacterFrame, "ScrollingFrame", UDim2.new(0.727, 0, 0.945, 0), UDim2.new(0.016, 0, 0.027, 0), Color3.fromRGB(0, 0, 0), 0.65, 10, {
+    ClipsDescendants = true,
+    ScrollingEnabled = true,
+})
+
+local UIGridLayout_1 = Instance.new("UIGridLayout")
+UIGridLayout_1.Parent = ScrollingFrame_1
+UIGridLayout_1.SortOrder = Enum.SortOrder.Name
+UIGridLayout_1.VerticalAlignment = Enum.VerticalAlignment.Top
+UIGridLayout_1.HorizontalAlignment = Enum.HorizontalAlignment.Left
+UIGridLayout_1.FillDirection = Enum.FillDirection.Horizontal
+
+local characters = {
+    {
+        name = "Connie",
+        image = "rbxassetid://133764935822586",
+        masteryImage = "rbxassetid://17619320997",
+    },
+    {
+        name = "Astro",
+        image = "rbxassetid://17476673323",
+        masteryImage = "rbxassetid://17619320997",
     }
+}
+
+for _, char in ipairs(characters) do
+    local button = createFrame(ScrollingFrame_1, char.name, UDim2.new(0.173, 0, 0.155, 0), UDim2.new(0, 0, 0, 0), Color3.fromRGB(255, 255, 255), 1, 12, {
+        BackgroundTransparency = 1,
+    })
+
+    local charFrame = createFrame(button, "Frame", UDim2.new(0.839, 0, 0.839, 0), UDim2.new(0.5, 0, 0.5, 0), Color3.fromRGB(121, 121, 121), 0, 2, {
+        AnchorPoint = Vector2.new(0.5, 0.5),
+    })
+    createUICorner(charFrame, 8)
+
+    local charImage = createImageLabel(charFrame, "CharacterImage", UDim2.new(0.64, 0, 0.61, 0), UDim2.new(0.175, 0, 0.141, 0), char.image, 0.6, 13, {
+        BackgroundTransparency = 0.6,
+    })
+    createUICorner(charImage, 8)
+
+    createTextLabel(button, "CharacterName", UDim2.new(0.839, 0, 0.156, 0), UDim2.new(0.079, 0, 0.759, 0), char.name, Color3.fromRGB(255, 255, 255), 14, {
+        TextXAlignment = Enum.TextXAlignment.Center,
+        TextYAlignment = Enum.TextYAlignment.Center,
+        Font = Enum.Font.FredokaOne
+    })
+
+    local masteryStar = createImageLabel(button, "MasteryStar", UDim2.new(0.215, 0, 0.206, 0), UDim2.new(0.702, 0, 0.073, 0), char.masteryImage, 1, 13, {
+        Visible = false
+    })
 end
 
-function LibraryUI:AddElement(library, name, imageId)
-    local ElementButton = Instance.new("TextButton")
-    ElementButton.Parent = library.ScrollingFrame
-    ElementButton.Name = name
-    ElementButton.Text = ""
-    ElementButton.BackgroundColor3 = Color3.fromRGB(121, 121, 121)
-    ElementButton.Size = UDim2.new(0, 100, 0, 100)
-
-    local UICorner = Instance.new("UICorner")
-    UICorner.Parent = ElementButton
-    UICorner.CornerRadius = UDim.new(0, 8)
-
-    local Image = Instance.new("ImageLabel")
-    Image.Parent = ElementButton
-    Image.Image = "rbxassetid://" .. imageId
-    Image.Size = UDim2.new(0.8, 0, 0.8, 0)
-    Image.Position = UDim2.new(0.1, 0, 0.1, 0)
-    Image.BackgroundTransparency = 1
-
-    return ElementButton
-end
-
-return LibraryUI
+print("UI Refactored and Fully Populated")
