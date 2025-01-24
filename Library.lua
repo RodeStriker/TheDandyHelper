@@ -1,110 +1,93 @@
-local LibGui = {}
+local GuiLibrary = {}
 
-local function createInstance(className, properties)
-    local instance = Instance.new(className)
-    for prop, value in pairs(properties) do
-        instance[prop] = value
-    end
-    return instance
+function GuiLibrary:CreateWindow()
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "TabsGui"
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.IgnoreGuiInset = true
+    ScreenGui.Parent = game.CoreGui
+
+    local MainFrame = Instance.new("Frame")
+    MainFrame.Name = "MainFrame"
+    MainFrame.Size = UDim2.new(0.52, 0, 0.64, 0)
+    MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+    MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+    MainFrame.BackgroundTransparency = 1
+    MainFrame.Parent = ScreenGui
+
+    local BackgroundFrame = Instance.new("Frame")
+    BackgroundFrame.Size = UDim2.new(1, 0, 1, 0)
+    BackgroundFrame.BackgroundColor3 = Color3.fromRGB(121, 121, 121)
+    BackgroundFrame.Parent = MainFrame
+
+    local Gradient = Instance.new("UIGradient")
+    Gradient.Color = ColorSequence.new(
+        Color3.fromRGB(140, 140, 140),
+        Color3.fromRGB(81, 81, 81)
+    )
+    Gradient.Rotation = 90
+    Gradient.Parent = BackgroundFrame
+
+    local Corner = Instance.new("UICorner")
+    Corner.CornerRadius = UDim.new(0, 8)
+    Corner.Parent = BackgroundFrame
+
+    return {
+        ScreenGui = ScreenGui,
+        MainFrame = MainFrame,
+        BackgroundFrame = BackgroundFrame,
+    }
 end
 
-function LibGui.createButton(parent, text, position, size)
-    return createInstance("TextButton", {
-        Parent = parent,
-        Text = text,
-        Size = size,
-        Position = position,
-        BackgroundColor3 = Color3.fromRGB(50, 50, 50),
-        TextColor3 = Color3.fromRGB(255, 255, 255),
-        Font = Enum.Font.SourceSans,
-        TextSize = 14,
-        AutoButtonColor = true
-    })
+function GuiLibrary:AddTitle(window, titleText)
+    local Title = Instance.new("TextLabel")
+    Title.Name = "Title"
+    Title.Size = UDim2.new(0.46, 0, 0.1, 0)
+    Title.Position = UDim2.new(0.5, 0, -0.1, 0)
+    Title.AnchorPoint = Vector2.new(0.5, 0)
+    Title.BackgroundTransparency = 1
+    Title.Text = titleText
+    Title.TextSize = 18
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.Font = Enum.Font.FredokaOne
+    Title.Parent = window.MainFrame
 end
 
-function LibGui.createLabel(parent, text, position, size)
-    return createInstance("TextLabel", {
-        Parent = parent,
-        Text = text,
-        Size = size,
-        Position = position,
-        BackgroundTransparency = 1,
-        TextColor3 = Color3.fromRGB(255, 255, 255),
-        Font = Enum.Font.SourceSans,
-        TextSize = 14
-    })
+function GuiLibrary:AddScrollingFrame(window)
+    local ScrollingFrame = Instance.new("ScrollingFrame")
+    ScrollingFrame.Name = "ScrollingFrame"
+    ScrollingFrame.Size = UDim2.new(0.7, 0, 0.94, 0)
+    ScrollingFrame.Position = UDim2.new(0.02, 0, 0.03, 0)
+    ScrollingFrame.BackgroundTransparency = 0.65
+    ScrollingFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    ScrollingFrame.CanvasSize = UDim2.new(0, 0, 4, 0)
+    ScrollingFrame.ScrollBarThickness = 12
+    ScrollingFrame.Parent = window.MainFrame
+
+    local GridLayout = Instance.new("UIGridLayout")
+    GridLayout.SortOrder = Enum.SortOrder.Name
+    GridLayout.FillDirection = Enum.FillDirection.Horizontal
+    GridLayout.Parent = ScrollingFrame
+
+    return ScrollingFrame
 end
 
-function LibGui.createFrame(parent, position, size)
-    return createInstance("Frame", {
-        Parent = parent,
-        Size = size,
-        Position = position,
-        BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    })
-end
+function GuiLibrary:AddButton(parent, buttonText, callback)
+    local Button = Instance.new("TextButton")
+    Button.Name = buttonText .. "Button"
+    Button.Size = UDim2.new(0.17, 0, 0.15, 0)
+    Button.BackgroundTransparency = 1
+    Button.Text = buttonText
+    Button.TextSize = 14
+    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Button.Font = Enum.Font.FredokaOne
+    Button.Parent = parent
 
-function LibGui.createTextbox(parent, placeholder, position, size)
-    return createInstance("TextBox", {
-        Parent = parent,
-        PlaceholderText = placeholder,
-        Size = size,
-        Position = position,
-        BackgroundColor3 = Color3.fromRGB(50, 50, 50),
-        TextColor3 = Color3.fromRGB(255, 255, 255),
-        Font = Enum.Font.SourceSans,
-        TextSize = 14,
-        ClearTextOnFocus = false
-    })
-end
-
-function LibGui.createDropdown(parent, options, position, size)
-    local dropdown = createInstance("Frame", {
-        Parent = parent,
-        Size = size,
-        Position = position,
-        BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    })
-
-    local button = createInstance("TextButton", {
-        Parent = dropdown,
-        Size = UDim2.new(1, 0, 1, 0),
-        BackgroundColor3 = Color3.fromRGB(50, 50, 50),
-        TextColor3 = Color3.fromRGB(255, 255, 255),
-        Font = Enum.Font.SourceSans,
-        TextSize = 14,
-        Text = "Select"
-    })
-
-    local list = createInstance("ScrollingFrame", {
-        Parent = dropdown,
-        Size = UDim2.new(1, 0, 0, 0),
-        Position = UDim2.new(0, 0, 1, 0),
-        Visible = false,
-        CanvasSize = UDim2.new(0, 0, #options * 0.1, 0)
-    })
-
-    for i, option in ipairs(options) do
-        createInstance("TextButton", {
-            Parent = list,
-            Size = UDim2.new(1, 0, 0.1, 0),
-            BackgroundColor3 = Color3.fromRGB(50, 50, 50),
-            TextColor3 = Color3.fromRGB(255, 255, 255),
-            Font = Enum.Font.SourceSans,
-            TextSize = 14,
-            Text = option,
-            MouseButton1Click = function()
-                button.Text = option
-                list.Visible = false
-            end
-        })
-    end
-
-    button.MouseButton1Click:Connect(function()
-        list.Visible = not list.Visible
+    Button.MouseButton1Click:Connect(function()
+        callback()
     end)
 
-    return dropdown
+    return Button
 end
 
-return LibGui
+return GuiLibrary
