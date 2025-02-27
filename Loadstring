@@ -1,6 +1,1 @@
 loadstring(game:HttpGet("https://raw.githubusercontent.com/RodeStriker/TheDandyHelper/refs/heads/main/MainScript", true))()
-
---[[Supported games:
-Dandys world (Main game)
-Dandys World (Lobby) (COMING SOON)
-]]
